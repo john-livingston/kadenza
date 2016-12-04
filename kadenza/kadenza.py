@@ -7,6 +7,7 @@ import os
 import re
 import datetime
 import argparse
+import pkg_resources
 
 import numpy as np
 
@@ -103,9 +104,9 @@ class TargetPixelFileFactory(object):
 
     def get_header_template(self, extension):
         """Returns a template `fits.Header` object for a given extension."""
-        template_fn = os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                                   "header-templates",
-                                   "tpf-ext{}-header.txt".format(extension))
+        fn = 'tpf-ext{}-header.txt'.format(extension)
+        fp = os.path.join('header-templates', fn)
+        template_fn = pkg_resources.resource_filename(__name__, fp)
         return fits.Header.fromtextfile(template_fn)
 
     def make_tpf(self, target_id):
@@ -132,7 +133,7 @@ class TargetPixelFileFactory(object):
         """Produce TPF files for all targets in the cadence data."""
         target_ids = list(self.pixel_mapping.targets.keys())
         log.info("Writing {} Target Pixel Files.".format(len(target_ids)))
-        ProgressBar.map(self.write_tpf, target_ids, multiprocess=True)
+        ProgressBar.map(self.write_tpf, target_ids, multiprocess=False)
 
     def _make_primary_hdu(self, target_id):
         """Returns the primary extension of a Target Pixel File."""
@@ -381,9 +382,9 @@ class FullFrameImageFactory(object):
         """Returns a template `fits.Header` object for a given extension."""
         if extension > 1:
             extension = 1
-        template_fn = os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                                   "header-templates",
-                                   "ffi-ext{}-header.txt".format(extension))
+        fn = 'ffi-ext{}-header.txt'.format(extension)
+        fp = os.path.join('header-templates', fn)
+        template_fn = pkg_resources.resource_filename(__name__, fp)
         return fits.Header.fromtextfile(template_fn)
 
     def make_ffi(self):

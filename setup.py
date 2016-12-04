@@ -28,6 +28,7 @@ setup(name='kadenza',
       install_requires=['numpy',
                         'astropy>=1.1'],
       entry_points=entry_points,
+      package_data={"kadenza": ["header-templates/*.txt"]},
       classifiers=[
           "Development Status :: 5 - Production/Stable",
           "License :: OSI Approved :: MIT License",
